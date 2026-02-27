@@ -3,17 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nota — Szkoła Muzyczna & Studio Nagrań</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Studio Kopernika 30 — Warszawa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #f5f0e8;
-    --dark: #1a1410;
-    --warm: #c8a96e;
-    --accent-school: #e8c547;
-    --accent-studio: #e05a3a;
-    --studio-dark: #0d0a08;
-    --studio-red: #c73a1e;
+    --navy: #0d1b2e;
+    --navy-mid: #152540;
+    --navy-light: #1e3355;
+    --wood: #c4924a;
+    --wood-light: #dbb07a;
+    --wood-pale: #f0d9b5;
+    --amber: #e8a832;
+    --warm-light: #ffecc4;
+    --text: #e8dcc8;
+    --text-dim: #8a7a62;
+    --white: #f5f0e8;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,13 +26,25 @@
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--cream);
-    color: var(--dark);
-    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
     overflow-x: hidden;
+    cursor: crosshair;
   }
 
-  /* ============ NAV ============ */
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAVIGATION */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -35,709 +52,1396 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.2rem 3rem;
-    background: rgba(245,240,232,0.9);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(26,20,16,0.1);
+    padding: 24px 48px;
+    background: linear-gradient(to bottom, rgba(13,27,46,0.95), transparent);
   }
 
   .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--wood-light);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  .nav-logo span {
-    color: var(--accent-studio);
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--wood);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .logo-mark::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background: var(--wood);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   }
 
   .nav-links {
     display: flex;
-    gap: 2.5rem;
+    gap: 40px;
     list-style: none;
-    align-items: center;
   }
 
   .nav-links a {
+    color: var(--text-dim);
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--dark);
-    letter-spacing: 0.04em;
-    transition: color 0.2s;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: color 0.3s;
   }
-  .nav-links a:hover { color: var(--warm); }
 
-  .nav-studio-btn {
-    background: var(--dark);
-    color: var(--cream) !important;
-    padding: 0.5rem 1.2rem;
-    border-radius: 2px;
-    transition: background 0.2s !important;
+  .nav-links a:hover { color: var(--wood-light); }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
   }
-  .nav-studio-btn:hover { background: var(--accent-studio) !important; color: var(--cream) !important; }
+  .hamburger span {
+    width: 24px;
+    height: 1.5px;
+    background: var(--wood-light);
+    transition: all 0.3s;
+    display: block;
+  }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); }
 
-  /* ============ HERO ============ */
+  /* MOBILE NAV DRAWER */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(7, 15, 26, 0.98);
+    z-index: 99;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 6px;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--wood); }
+
+  /* HERO */
   .hero {
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding-top: 80px;
     position: relative;
     overflow: hidden;
   }
 
-  .hero-school {
-    background: var(--cream);
+  .hero-left {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5rem 4rem 5rem 5rem;
+    padding: 140px 64px 80px;
     position: relative;
+    z-index: 2;
   }
 
-  .hero-school::after {
-    content: '';
-    position: absolute;
-    right: 0; top: 10%; bottom: 10%;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--dark) 30%, var(--dark) 70%, transparent);
-  }
-
-  .hero-school-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 6px;
     text-transform: uppercase;
-    color: var(--warm);
-    margin-bottom: 1.5rem;
+    color: var(--wood);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
 
-  .hero-school h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    line-height: 1.05;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.02em;
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--wood);
   }
 
-  .hero-school h1 em {
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 9vw, 130px);
+    line-height: 0.9;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .hero-title .accent {
+    color: var(--wood);
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-family: 'DM Serif Display', serif;
     font-style: italic;
-    color: var(--warm);
+    font-size: clamp(18px, 2.5vw, 28px);
+    color: var(--wood-pale);
+    margin-bottom: 48px;
+    opacity: 0.7;
   }
 
-  .hero-school p {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: #5a4e44;
-    max-width: 420px;
-    margin-bottom: 2.5rem;
+  .hero-address {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    line-height: 2;
+    border-left: 1px solid var(--navy-light);
+    padding-left: 20px;
+  }
+
+  .hero-cta {
+    margin-top: 48px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
   }
 
   .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    background: var(--accent-school);
-    color: var(--dark);
-    padding: 0.9rem 2rem;
-    font-size: 0.9rem;
+    background: var(--wood);
+    color: var(--navy);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    border: none;
+    cursor: pointer;
     text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: fit-content;
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 4px 4px 0 var(--dark); }
-
-  /* instruments decoration */
-  .instruments-grid {
-    position: absolute;
-    bottom: 3rem;
-    left: 5rem;
-    display: flex;
-    gap: 1.5rem;
-  }
-  .instrument-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    border: 1px solid rgba(26,20,16,0.3);
-    padding: 0.3rem 0.7rem;
-    color: #5a4e44;
+    display: inline-block;
+    transition: background 0.3s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   }
 
-  /* === HERO STUDIO SIDE === */
-  .hero-studio {
-    background: var(--studio-dark);
+  .btn-primary:hover {
+    background: var(--wood-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-decoration: none;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 5rem 5rem 5rem 4rem;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.3s;
+  }
+
+  .btn-secondary::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+
+  .btn-secondary:hover { color: var(--wood-light); }
+  .btn-secondary:hover::after { transform: translateX(4px); }
+
+  /* HERO RIGHT - Studio Visual */
+  .hero-right {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
   }
 
-  /* grid texture */
-  .hero-studio::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(200,169,110,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(200,169,110,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  .rec-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--accent-studio);
-    margin-bottom: 1.5rem;
+  .studio-visual {
+    width: 100%;
+    height: 100%;
     position: relative;
   }
-  .rec-dot {
-    width: 8px; height: 8px;
-    background: var(--accent-studio);
-    border-radius: 50%;
-    animation: pulse-rec 1.5s ease-in-out infinite;
-  }
-  @keyframes pulse-rec {
-    0%,100% { opacity: 1; }
-    50% { opacity: 0.2; }
-  }
 
-  .hero-studio h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    line-height: 1.05;
-    color: var(--cream);
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.02em;
-  }
-  .hero-studio h2 em {
-    font-style: italic;
-    color: var(--accent-studio);
-  }
-
-  .hero-studio p {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: rgba(245,240,232,0.55);
-    max-width: 420px;
-    margin-bottom: 2.5rem;
-  }
-
-  .btn-studio {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    background: transparent;
-    color: var(--cream);
-    border: 1px solid rgba(245,240,232,0.4);
-    padding: 0.9rem 2rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: all 0.2s;
-    width: fit-content;
-  }
-  .btn-studio:hover {
-    background: var(--accent-studio);
-    border-color: var(--accent-studio);
-  }
-
-  /* waveform deco */
-  .waveform {
-    position: absolute;
-    bottom: 3rem;
-    left: 4rem;
-    right: 4rem;
-    height: 40px;
+  .studio-room {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(196, 146, 74, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 70%, rgba(232, 168, 50, 0.06) 0%, transparent 50%),
+      linear-gradient(135deg, var(--navy-mid) 0%, #0a1520 100%);
     display: flex;
     align-items: center;
-    gap: 3px;
-    opacity: 0.3;
-  }
-  .wave-bar {
-    background: var(--warm);
-    width: 3px;
-    border-radius: 2px;
-    animation: wave-anim 1.2s ease-in-out infinite;
-  }
-  @keyframes wave-anim {
-    0%,100% { transform: scaleY(0.3); }
-    50% { transform: scaleY(1); }
+    justify-content: center;
+    position: relative;
   }
 
-  /* ============ SECTION: SCHOOL ============ */
-  .section-school {
-    background: var(--cream);
-    padding: 7rem 5rem;
+  /* Abstract console representation */
+  .console-svg-wrapper {
+    width: 80%;
+    max-width: 480px;
+    opacity: 0.9;
+  }
+
+  /* Warm light glow from top */
+  .studio-room::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(232, 168, 50, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* VU Meter animation */
+  .vu-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 60px;
+    position: absolute;
+    bottom: 32px;
+    right: 40px;
+  }
+
+  .vu-bar {
+    width: 4px;
+    background: var(--wood);
+    animation: vu-pulse 0.6s ease-in-out infinite alternate;
+    transform-origin: bottom;
+    opacity: 0.7;
+  }
+
+  .vu-bar:nth-child(1) { height: 20px; animation-delay: 0s; }
+  .vu-bar:nth-child(2) { height: 45px; animation-delay: 0.1s; }
+  .vu-bar:nth-child(3) { height: 30px; animation-delay: 0.05s; }
+  .vu-bar:nth-child(4) { height: 55px; animation-delay: 0.15s; }
+  .vu-bar:nth-child(5) { height: 25px; animation-delay: 0.08s; }
+  .vu-bar:nth-child(6) { height: 40px; animation-delay: 0.2s; }
+  .vu-bar:nth-child(7) { height: 15px; animation-delay: 0.03s; }
+  .vu-bar:nth-child(8) { height: 50px; animation-delay: 0.12s; }
+
+  @keyframes vu-pulse {
+    from { transform: scaleY(0.3); opacity: 0.4; }
+    to { transform: scaleY(1); opacity: 0.9; }
+  }
+
+  /* Divider line */
+  .hero-divider {
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    bottom: 10%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--navy-light) 30%, var(--wood) 50%, var(--navy-light) 70%, transparent);
+    z-index: 3;
+  }
+
+  /* TICKER */
+  .ticker-wrapper {
+    background: var(--wood);
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 0;
+    animation: ticker 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--navy);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .ticker-item::after {
+    content: '◆';
+    font-size: 8px;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTIONS common */
+  section {
+    padding: 120px 64px;
   }
 
   .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
+    font-size: 10px;
+    letter-spacing: 6px;
     text-transform: uppercase;
-    color: var(--warm);
-    margin-bottom: 1rem;
+    color: var(--wood);
+    margin-bottom: 60px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
   }
 
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    margin-bottom: 1rem;
-    letter-spacing: -0.02em;
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--navy-light);
+    max-width: 200px;
   }
 
-  .school-grid {
+  /* ABOUT SECTION */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    background: var(--navy-mid);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about::before {
+    content: '30';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 400px;
+    color: rgba(196, 146, 74, 0.03);
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .about-text h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 4vw, 56px);
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+
+  .about-text h2 em {
+    color: var(--wood);
+    font-style: italic;
+  }
+
+  .about-text p {
+    font-size: 13px;
+    line-height: 2;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  /* Room features grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--navy);
+  }
+
+  .feature-card {
+    background: var(--navy-mid);
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .feature-card:hover {
+    background: var(--navy-light);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--wood);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.4s;
+  }
+
+  .feature-card:hover::before { transform: scaleY(1); }
+
+  .feature-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: rgba(196, 146, 74, 0.15);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .feature-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--wood-light);
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  /* EQUIPMENT SECTION */
+  .equipment {
+    background: var(--navy);
+  }
+
+  .eq-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--navy-light);
+    border: 1px solid var(--navy-light);
+    margin-top: 40px;
+  }
+
+  .eq-item {
+    background: var(--navy);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: background 0.3s;
+  }
+
+  .eq-item:hover { background: var(--navy-mid); }
+
+  .eq-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--wood);
+    flex-shrink: 0;
+  }
+
+  .eq-name {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .eq-cat {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* BOOKING SECTION */
+  .booking {
+    background: linear-gradient(to bottom right, var(--navy-mid), var(--navy));
+    position: relative;
+    overflow: hidden;
+  }
+
+  .booking-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .booking::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(196,146,74,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .booking-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 90px);
+    line-height: 0.9;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+
+  .booking-title span { color: var(--wood); }
+
+  .booking-desc {
+    font-size: 13px;
+    line-height: 2;
+    color: var(--text-dim);
+  }
+
+  .contact-block {
+    background: rgba(21, 37, 64, 0.6);
+    border: 1px solid var(--navy-light);
+    padding: 48px;
+    position: relative;
+  }
+
+  .contact-block::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px;
+    height: 60px;
+    border-top: 2px solid var(--wood);
+    border-right: 2px solid var(--wood);
+  }
+
+  .contact-row {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--navy-light);
+  }
+
+  .contact-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .contact-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--wood);
+    margin-bottom: 8px;
+  }
+
+  .contact-value {
+    font-size: 14px;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  /* RATES */
+  .rates-section {
+    background: var(--navy-mid);
+    padding: 120px 64px;
+  }
+
+  .rates-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2px;
-    margin-top: 4rem;
+    background: var(--navy);
+    margin-top: 40px;
   }
 
-  .school-card {
-    background: white;
-    padding: 2.5rem;
+  .rate-card {
+    background: var(--navy-mid);
+    padding: 48px 36px;
     position: relative;
+    transition: background 0.3s;
     overflow: hidden;
-    transition: transform 0.2s;
   }
-  .school-card:hover { transform: translateY(-4px); }
-  .school-card::before {
-    content: '';
+
+  .rate-card.featured {
+    background: var(--navy-light);
+  }
+
+  .rate-card.featured::after {
+    content: 'POPULAR';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--accent-school);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s;
-  }
-  .school-card:hover::before { transform: scaleX(1); }
-
-  .card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  .card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    margin-bottom: 0.7rem;
-  }
-  .card-text {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #6a5e54;
+    top: 20px; right: -20px;
+    background: var(--wood);
+    color: var(--navy);
+    font-size: 9px;
+    letter-spacing: 3px;
+    padding: 4px 32px;
+    transform: rotate(45deg);
+    transform-origin: center;
   }
 
-  /* ============ DIVIDER ============ */
-  .divider {
-    background: var(--dark);
-    color: var(--cream);
-    padding: 2.5rem 5rem;
+  .rate-type {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--wood);
+    margin-bottom: 24px;
+  }
+
+  .rate-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 70px;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .rate-unit {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+
+  .rate-features {
+    list-style: none;
+  }
+
+  .rate-features li {
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
+    gap: 12px;
+    letter-spacing: 1px;
   }
-  .divider-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    font-style: italic;
+
+  .rate-features li::before {
+    content: '—';
+    color: var(--wood);
+    flex-shrink: 0;
   }
-  .divider-line {
-    flex: 1;
+
+  /* FOOTER */
+  footer {
+    background: #070f1a;
+    padding: 60px 64px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 40px;
+    border-top: 1px solid var(--navy-light);
+  }
+
+  .footer-copy {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+
+  .footer-center {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 8px;
+    color: var(--wood);
+    text-align: center;
+  }
+
+  .footer-right {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-align: right;
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 64px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    z-index: 5;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--wood), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6) translateY(-10px); }
+    50% { opacity: 1; transform: scaleY(1) translateY(0); }
+  }
+
+  /* WAVEFORM deco */
+  .waveform-deco {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 80px;
+    opacity: 0.08;
+  }
+
+  /* Horizontal rule styled */
+  hr.styled {
+    border: none;
     height: 1px;
-    background: rgba(245,240,232,0.2);
-  }
-  .divider-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--warm);
+    background: linear-gradient(to right, var(--wood), transparent);
+    margin: 60px 0;
+    max-width: 300px;
   }
 
-  /* ============ STUDIO SECTION ============ */
-  .section-studio {
-    background: var(--studio-dark);
-    padding: 7rem 5rem;
-    position: relative;
-    overflow: hidden;
+  /* PLACEHOLDER LOGO */
+  .placeholder-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(196, 146, 74, 0.1);
+    border: 1px dashed rgba(196, 146, 74, 0.3);
+    padding: 8px 16px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
   }
 
-  .section-studio::before {
-    content: '';
+  /* =====================
+     RESPONSIVE — MOBILE
+     ===================== */
+  @media (max-width: 768px) {
+
+    nav {
+      padding: 20px 24px;
+    }
+
+    .nav-links { display: none; }
+
+    .hamburger { display: flex; }
+
+    /* HERO — stack vertically */
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 100svh;
+    }
+
+    .hero-left {
+      padding: 120px 24px 48px;
+      order: 1;
+    }
+
+    .hero-right {
+      order: 2;
+      height: 260px;
+      min-height: 260px;
+    }
+
+    .hero-divider { display: none; }
+
+    .hero-title {
+      font-size: clamp(64px, 18vw, 96px);
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      margin-bottom: 28px;
+    }
+
+    .hero-address { font-size: 9px; }
+
+    .hero-cta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .scroll-hint { display: none; }
+
+    .vu-bars {
+      bottom: 16px;
+      right: 16px;
+    }
+
+    /* ABOUT */
+    .about {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 64px 24px;
+    }
+
+    .about::before { display: none; }
+
+    .features-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .feature-card { padding: 24px 18px; }
+
+    /* EQUIPMENT */
+    .equipment { padding: 64px 24px; }
+
+    .eq-list {
+      grid-template-columns: 1fr;
+    }
+
+    /* RATES */
+    .rates-section { padding: 64px 24px; }
+
+    .rates-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rate-card { padding: 36px 28px; }
+
+    .rate-card.featured::after {
+      font-size: 8px;
+      top: 16px;
+      right: -24px;
+    }
+
+    /* BOOKING */
+    .booking { padding: 64px 24px; }
+
+    .booking-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .booking-title { font-size: clamp(40px, 14vw, 72px); }
+
+    .contact-block { padding: 32px 24px; }
+
+    /* SECTIONS */
+    section { padding: 64px 24px; }
+
+    /* FOOTER */
+    footer {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 24px;
+      padding: 40px 24px;
+    }
+
+    .footer-right { text-align: center; }
+  }
+
+  /* Tablet */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    nav { padding: 20px 32px; }
+    .nav-links { gap: 24px; }
+
+    .hero-left { padding: 120px 40px 60px; }
+
+    .about { padding: 80px 40px; gap: 48px; }
+    section { padding: 80px 40px; }
+    .booking { padding: 80px 40px; }
+    .rates-section { padding: 80px 40px; }
+    .equipment { padding: 80px 40px; }
+    footer { padding: 48px 40px; }
+
+    .eq-list { grid-template-columns: 1fr 1fr; }
+    .rates-grid { grid-template-columns: 1fr; gap: 2px; }
+  }
+
+  /* Animated bg lines */
+  .bg-lines {
     position: absolute;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(200,169,110,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(200,169,110,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
   }
 
-  .section-studio .section-label { color: var(--accent-studio); }
-  .section-studio .section-title { color: var(--cream); }
-
-  .studio-layout {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 5rem;
-    margin-top: 4rem;
-    position: relative;
-  }
-
-  .studio-features {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .studio-feature {
-    border-left: 2px solid rgba(245,240,232,0.1);
-    padding-left: 2rem;
-    transition: border-color 0.2s;
-    cursor: default;
-  }
-  .studio-feature:hover { border-left-color: var(--accent-studio); }
-
-  .studio-feature h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    color: var(--cream);
-    margin-bottom: 0.5rem;
-  }
-  .studio-feature p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: rgba(245,240,232,0.45);
-  }
-
-  .studio-info-panel {
-    border: 1px solid rgba(245,240,232,0.1);
-    padding: 3rem;
-    position: relative;
-  }
-
-  .studio-info-panel::before {
-    content: 'STUDIO';
+  .bg-line {
     position: absolute;
-    top: -0.6rem;
-    left: 2rem;
-    background: var(--studio-dark);
-    padding: 0 0.7rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    color: var(--accent-studio);
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(196,146,74,0.06), transparent);
+    top: 0;
+    bottom: 0;
+    animation: line-flicker 4s ease-in-out infinite;
   }
 
-  .info-stat {
-    margin-bottom: 2rem;
-  }
-  .info-stat-value {
-    font-family: 'Space Mono', monospace;
-    font-size: 2.5rem;
-    color: var(--cream);
-    line-height: 1;
-    margin-bottom: 0.3rem;
-  }
-  .info-stat-label {
-    font-size: 0.8rem;
-    color: rgba(245,240,232,0.4);
-    letter-spacing: 0.05em;
-  }
-  .stat-divider {
-    height: 1px;
-    background: rgba(245,240,232,0.08);
-    margin: 1.5rem 0;
+  .bg-line:nth-child(1) { left: 20%; animation-delay: 0s; }
+  .bg-line:nth-child(2) { left: 40%; animation-delay: 1.5s; }
+  .bg-line:nth-child(3) { left: 60%; animation-delay: 0.8s; }
+  .bg-line:nth-child(4) { left: 80%; animation-delay: 2.2s; }
+
+  @keyframes line-flicker {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
   }
 
-  .btn-studio-full {
-    display: block;
-    width: 100%;
-    background: var(--accent-studio);
-    color: var(--cream);
-    text-align: center;
-    padding: 1rem;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    margin-top: 1.5rem;
-    transition: opacity 0.2s;
+  /* HERO ENTER ANIMATION */
+  .fade-up {
+    animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-  .btn-studio-full:hover { opacity: 0.85; }
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.2s; }
+  .fade-up-3 { animation-delay: 0.35s; }
+  .fade-up-4 { animation-delay: 0.5s; }
+  .fade-up-5 { animation-delay: 0.65s; }
 
-  /* ============ CONTACT/FOOTER ============ */
-  .footer {
-    background: var(--dark);
-    color: var(--cream);
-    padding: 5rem 5rem 3rem;
-  }
-
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    gap: 4rem;
-    margin-bottom: 4rem;
-  }
-
-  .footer-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  .footer-logo span { color: var(--accent-studio); }
-
-  .footer-tagline {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: rgba(245,240,232,0.4);
-    max-width: 280px;
-  }
-
-  .footer-col h4 {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--warm);
-    margin-bottom: 1.2rem;
-  }
-  .footer-col ul { list-style: none; }
-  .footer-col li {
-    margin-bottom: 0.6rem;
-    font-size: 0.9rem;
-    color: rgba(245,240,232,0.6);
-  }
-
-  .footer-bottom {
-    border-top: 1px solid rgba(245,240,232,0.1);
-    padding-top: 2rem;
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: rgba(245,240,232,0.3);
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* ============ ANIMATIONS ============ */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(24px);
-    animation: fadeUp 0.7s ease forwards;
-  }
   @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .delay-1 { animation-delay: 0.1s; }
-  .delay-2 { animation-delay: 0.25s; }
-  .delay-3 { animation-delay: 0.4s; }
-  .delay-4 { animation-delay: 0.55s; }
+
+  /* CONSOLE SVG styling */
+  .console-art {
+    width: 100%;
+    max-width: 440px;
+    filter: drop-shadow(0 20px 60px rgba(196, 146, 74, 0.15));
+  }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- NAVIGATION -->
 <nav>
-  <div class="nav-logo">no<span>t</span>a</div>
+  <a href="#" class="nav-logo">
+    <div class="logo-mark"></div>
+    KOPERNIKA 30
+  </a>
   <ul class="nav-links">
-    <li><a href="#szkola">Szkoła muzyczna</a></li>
-    <li><a href="#studio">Studio nagrań</a></li>
-    <li><a href="#kontakt">Kontakt</a></li>
-    <li><a href="#studio" class="nav-studio-btn">→ Studio</a></li>
+    <li><a href="#about">Studio</a></li>
+    <li><a href="#equipment">Sprzęt</a></li>
+    <li><a href="#rates">Cennik</a></li>
+    <li><a href="#booking">Kontakt</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- HERO: dwie połówki -->
-<section class="hero">
-  <!-- LEWA: szkoła -->
-  <div class="hero-school">
-    <p class="hero-school-tag fade-in">Szkoła muzyczna</p>
-    <h1 class="fade-in delay-1">Naucz się<br>grać <em>z pasją</em></h1>
-    <p class="fade-in delay-2">Indywidualne lekcje gry na instrumentach dla dzieci i dorosłych. Gitara, fortepian, śpiew, perkusja i więcej — w atmosferze prawdziwej muzyki.</p>
-    <a href="#szkola" class="btn-primary fade-in delay-3">Zapisz się na lekcje →</a>
-    <div class="instruments-grid fade-in delay-4">
-      <span class="instrument-tag">Gitara</span>
-      <span class="instrument-tag">Fortepian</span>
-      <span class="instrument-tag">Perkusja</span>
-      <span class="instrument-tag">Śpiew</span>
-    </div>
-  </div>
-
-  <!-- PRAWA: studio -->
-  <div class="hero-studio">
-    <div class="rec-indicator">
-      <div class="rec-dot"></div>
-      REC — STUDIO NAGRAŃ
-    </div>
-    <h2 class="fade-in delay-1">Nagraj<br>swój <em>dźwięk</em></h2>
-    <p class="fade-in delay-2">Profesjonalne studio nagrań z pełnym wyposażeniem. Nagrywamy płyty, single, podkłady, voice-over. Dla artystów, zespołów i firm.</p>
-    <a href="#studio" class="btn-studio fade-in delay-3">Odwiedź studio →</a>
-
-    <!-- waveform deco -->
-    <div class="waveform">
-      <div class="wave-bar" style="height:15px;animation-delay:0s"></div>
-      <div class="wave-bar" style="height:28px;animation-delay:0.08s"></div>
-      <div class="wave-bar" style="height:22px;animation-delay:0.16s"></div>
-      <div class="wave-bar" style="height:35px;animation-delay:0.24s"></div>
-      <div class="wave-bar" style="height:18px;animation-delay:0.32s"></div>
-      <div class="wave-bar" style="height:30px;animation-delay:0.4s"></div>
-      <div class="wave-bar" style="height:40px;animation-delay:0.48s"></div>
-      <div class="wave-bar" style="height:25px;animation-delay:0.56s"></div>
-      <div class="wave-bar" style="height:32px;animation-delay:0.64s"></div>
-      <div class="wave-bar" style="height:20px;animation-delay:0.72s"></div>
-      <div class="wave-bar" style="height:38px;animation-delay:0.8s"></div>
-      <div class="wave-bar" style="height:16px;animation-delay:0.88s"></div>
-      <div class="wave-bar" style="height:27px;animation-delay:0.96s"></div>
-      <div class="wave-bar" style="height:34px;animation-delay:1.04s"></div>
-      <div class="wave-bar" style="height:21px;animation-delay:1.12s"></div>
-      <div class="wave-bar" style="height:29px;animation-delay:1.2s"></div>
-      <div class="wave-bar" style="height:40px;animation-delay:1.28s"></div>
-      <div class="wave-bar" style="height:18px;animation-delay:1.36s"></div>
-      <div class="wave-bar" style="height:36px;animation-delay:1.44s"></div>
-      <div class="wave-bar" style="height:23px;animation-delay:1.52s"></div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION: SZKOŁA -->
-<section class="section-school" id="szkola">
-  <p class="section-label">Co oferujemy</p>
-  <h2 class="section-title">Szkoła muzyczna</h2>
-  <p style="color:#6a5e54;max-width:560px;line-height:1.7">Lekcje dopasowane do każdego poziomu i wieku. Uczymy nie tylko techniki — uczymy miłości do muzyki.</p>
-
-  <div class="school-grid">
-    <div class="school-card">
-      <div class="card-icon">🎸</div>
-      <div class="card-title">Gitara</div>
-      <p class="card-text">Klasyczna, elektryczna, akustyczna. Od pierwszych akordów do zaawansowanej techniki fingerpicking i solówek.</p>
-    </div>
-    <div class="school-card">
-      <div class="card-icon">🎹</div>
-      <div class="card-title">Fortepian & Keyboard</div>
-      <p class="card-text">Nauka gry od podstaw, teoria muzyki, czytanie nut. Klasyka i współczesność — wybierasz styl, my zapewniamy solidne podstawy.</p>
-    </div>
-    <div class="school-card">
-      <div class="card-icon">🥁</div>
-      <div class="card-title">Perkusja</div>
-      <p class="card-text">Indywidualne lekcje w wyciszonej sali. Rytm, technika, groove — dla dzieci i dorosłych na każdym poziomie.</p>
-    </div>
-    <div class="school-card">
-      <div class="card-icon">🎤</div>
-      <div class="card-title">Śpiew</div>
-      <p class="card-text">Emisja głosu, praca z mikrofonem, interpretacja. Dla przyszłych solistów i tych, którzy chcą po prostu lepiej śpiewać.</p>
-    </div>
-    <div class="school-card">
-      <div class="card-icon">🎻</div>
-      <div class="card-title">Skrzypce & Inne</div>
-      <p class="card-text">Rozszerzamy ofertę instrumentów. Skontaktuj się z nami, by zapytać o dostępność zajęć z konkretnego instrumentu.</p>
-    </div>
-    <div class="school-card">
-      <div class="card-icon">🎵</div>
-      <div class="card-title">Teoria & Kształcenie</div>
-      <p class="card-text">Harmonia, solfeż, czytanie nut. Dla tych, którzy chcą rozumieć muzykę nie tylko słuchem, ale i głową.</p>
-    </div>
-  </div>
-</section>
-
-<!-- DIVIDER -->
-<div class="divider">
-  <span class="divider-tag">JEDNO MIEJSCE</span>
-  <div class="divider-line"></div>
-  <span class="divider-text">Szkoła i studio — pod jednym dachem.</span>
-  <div class="divider-line"></div>
-  <span class="divider-tag">DWA ŚWIATY</span>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" class="mobile-link">Studio</a>
+  <a href="#equipment" class="mobile-link">Sprzęt</a>
+  <a href="#rates" class="mobile-link">Cennik</a>
+  <a href="#booking" class="mobile-link">Kontakt</a>
 </div>
 
-<!-- SECTION: STUDIO -->
-<section class="section-studio" id="studio">
-  <p class="section-label">Studio nagrań</p>
-  <h2 class="section-title">Twoja muzyka.<br>Profesjonalne brzmienie.</h2>
+<!-- HERO -->
+<section class="hero">
+  <div class="bg-lines">
+    <div class="bg-line"></div>
+    <div class="bg-line"></div>
+    <div class="bg-line"></div>
+    <div class="bg-line"></div>
+  </div>
 
-  <div class="studio-layout">
-    <div class="studio-features">
-      <div class="studio-feature">
-        <h3>Nagrania muzyczne</h3>
-        <p>Pełne nagranie albumu, singla lub dema. Pracujemy z artystami indywidualnymi, zespołami i chórami.</p>
-      </div>
-      <div class="studio-feature">
-        <h3>Mixing & Mastering</h3>
-        <p>Profesjonalne opracowanie dźwięku. Twoje nagranie gotowe do wydania na streamingach, radio lub CD.</p>
-      </div>
-      <div class="studio-feature">
-        <h3>Voice Over & Podcast</h3>
-        <p>Nagrania lektorskie, reklamy, audiobooki, podcasty. Cicha, izolowana kabina i szybki turnaround.</p>
-      </div>
-      <div class="studio-feature">
-        <h3>Produkcja muzyczna</h3>
-        <p>Tworzymy podkłady, aranżacje i produkcję od zera. Masz pomysł na utwór — my mamy narzędzia, żeby go zrealizować.</p>
+  <div class="hero-left">
+    <div class="placeholder-badge">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-dasharray="3 2"/>
+      </svg>
+      Logo — Placeholder
+    </div>
+    <div class="hero-eyebrow fade-up fade-up-1">Warszawa · ul. Mikołaja Kopernika 30</div>
+    <h1 class="hero-title fade-up fade-up-2">
+      STUDIO<span class="accent">NAGRAŃ</span>
+    </h1>
+    <p class="hero-subtitle fade-up fade-up-3">gdzie brzmienie nabiera charakteru</p>
+    <div class="hero-address fade-up fade-up-4">
+      Profesjonalne nagrania<br>
+      Miks & mastering<br>
+      Produkcja muzyczna
+    </div>
+    <div class="hero-cta fade-up fade-up-5">
+      <a href="#booking" class="btn-primary">Zarezerwuj sesję</a>
+      <a href="#about" class="btn-secondary">Poznaj studio</a>
+    </div>
+  </div>
+
+  <div class="hero-divider"></div>
+
+  <div class="hero-right">
+    <div class="studio-room">
+      <!-- Mixing console SVG art -->
+      <svg class="console-art" viewBox="0 0 440 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Room ceiling light -->
+        <ellipse cx="220" cy="20" rx="80" ry="30" fill="rgba(232,168,50,0.08)"/>
+        <line x1="220" y1="0" x2="220" y2="50" stroke="rgba(232,168,50,0.3)" stroke-width="1"/>
+        <ellipse cx="220" cy="50" rx="12" ry="4" fill="rgba(232,168,50,0.6)"/>
+        <ellipse cx="220" cy="50" rx="60" ry="20" fill="rgba(232,168,50,0.04)"/>
+        <ellipse cx="220" cy="50" rx="120" ry="50" fill="rgba(232,168,50,0.02)"/>
+
+        <!-- Console body -->
+        <rect x="40" y="140" width="360" height="160" rx="4" fill="#0d1b2e" stroke="rgba(196,146,74,0.2)" stroke-width="1"/>
+        <rect x="40" y="140" width="360" height="40" rx="4" fill="#152540"/>
+
+        <!-- Sliders row -->
+        <g opacity="0.8">
+          <rect x="68" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="64" y="158" width="10" height="4" rx="1" fill="#c4924a"/>
+
+          <rect x="98" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="94" y="162" width="10" height="4" rx="1" fill="#c4924a"/>
+
+          <rect x="128" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="124" y="155" width="10" height="4" rx="1" fill="#c4924a"/>
+
+          <rect x="158" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="154" y="164" width="10" height="4" rx="1" fill="#c4924a"/>
+
+          <rect x="188" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="184" y="152" width="10" height="4" rx="1" fill="#e8a832"/>
+
+          <rect x="218" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="214" y="160" width="10" height="4" rx="1" fill="#c4924a"/>
+
+          <rect x="248" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="244" y="154" width="10" height="4" rx="1" fill="#c4924a"/>
+
+          <rect x="278" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="274" y="166" width="10" height="4" rx="1" fill="#c4924a"/>
+
+          <rect x="308" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="304" y="158" width="10" height="4" rx="1" fill="#e8a832"/>
+
+          <rect x="338" y="150" width="2" height="20" rx="1" fill="rgba(196,146,74,0.15)"/>
+          <rect x="334" y="153" width="10" height="4" rx="1" fill="#c4924a"/>
+        </g>
+
+        <!-- Knobs area -->
+        <g>
+          <!-- Row of knobs -->
+          <circle cx="68" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="68" y1="200" x2="72" y2="196" stroke="#c4924a" stroke-width="1.5"/>
+
+          <circle cx="98" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="98" y1="200" x2="102" y2="197" stroke="#c4924a" stroke-width="1.5"/>
+
+          <circle cx="128" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="128" y1="200" x2="128" y2="193" stroke="#c4924a" stroke-width="1.5"/>
+
+          <circle cx="158" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="158" y1="200" x2="154" y2="196" stroke="#c4924a" stroke-width="1.5"/>
+
+          <circle cx="188" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="188" y1="200" x2="191" y2="194" stroke="#e8a832" stroke-width="1.5"/>
+
+          <circle cx="218" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="218" y1="200" x2="218" y2="193" stroke="#c4924a" stroke-width="1.5"/>
+
+          <circle cx="248" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="248" y1="200" x2="252" y2="196" stroke="#c4924a" stroke-width="1.5"/>
+
+          <circle cx="278" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="278" y1="200" x2="275" y2="194" stroke="#c4924a" stroke-width="1.5"/>
+
+          <circle cx="308" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="308" y1="200" x2="311" y2="205" stroke="#e8a832" stroke-width="1.5"/>
+
+          <circle cx="338" cy="200" r="7" fill="#0a141f" stroke="rgba(196,146,74,0.4)" stroke-width="1.5"/>
+          <line x1="338" y1="200" x2="338" y2="193" stroke="#c4924a" stroke-width="1.5"/>
+        </g>
+
+        <!-- VU meters on right -->
+        <rect x="370" y="148" width="22" height="80" rx="2" fill="#070f1a" stroke="rgba(196,146,74,0.2)"/>
+        <rect x="373" y="168" width="16" height="35" rx="1" fill="rgba(196,146,74,0.2)"/>
+        <rect x="373" y="168" width="16" height="55" rx="1" fill="rgba(196,146,74,0.08)"/>
+        <rect x="373" y="151" width="16" height="15" rx="1" fill="rgba(196,146,74,0.5)"/>
+
+        <!-- Screen / monitor area -->
+        <rect x="55" y="220" width="200" height="65" rx="3" fill="#050d14" stroke="rgba(196,146,74,0.15)"/>
+        <rect x="58" y="223" width="194" height="59" rx="2" fill="#030a10"/>
+        <!-- Waveform on screen -->
+        <polyline points="60,252 75,240 82,258 90,235 99,255 108,242 115,260 122,238 130,254 138,244 145,262 153,237 160,256 168,246 175,252 183,241 190,257 198,244 205,252 213,239 220,255 228,243 235,252 243,242 248,250" stroke="#c4924a" stroke-width="1.5" fill="none" opacity="0.7"/>
+        <!-- Scanlines -->
+        <line x1="58" y1="233" x2="252" y2="233" stroke="rgba(196,146,74,0.05)" stroke-width="1"/>
+        <line x1="58" y1="243" x2="252" y2="243" stroke="rgba(196,146,74,0.05)" stroke-width="1"/>
+        <line x1="58" y1="253" x2="252" y2="253" stroke="rgba(196,146,74,0.05)" stroke-width="1"/>
+        <line x1="58" y1="263" x2="252" y2="263" stroke="rgba(196,146,74,0.05)" stroke-width="1"/>
+        <line x1="58" y1="273" x2="252" y2="273" stroke="rgba(196,146,74,0.05)" stroke-width="1"/>
+
+        <!-- Buttons bottom right -->
+        <rect x="270" y="225" width="90" height="55" rx="2" fill="#0a141f"/>
+        <rect x="275" y="232" width="18" height="12" rx="1" fill="rgba(232,168,50,0.7)"/>
+        <rect x="299" y="232" width="18" height="12" rx="1" fill="rgba(196,146,74,0.2)"/>
+        <rect x="323" y="232" width="18" height="12" rx="1" fill="rgba(196,146,74,0.2)"/>
+        <rect x="275" y="250" width="18" height="12" rx="1" fill="rgba(196,146,74,0.2)"/>
+        <rect x="299" y="250" width="18" height="12" rx="1" fill="rgba(196,146,74,0.2)"/>
+        <circle cx="333" cy="256" r="8" fill="#070f1a" stroke="rgba(232,168,50,0.4)" stroke-width="1.5"/>
+
+        <!-- Floor reflection -->
+        <rect x="40" y="298" width="360" height="3" rx="1" fill="rgba(196,146,74,0.05)"/>
+
+        <!-- Studio glass window top-right suggestion -->
+        <rect x="340" y="40" width="80" height="60" rx="3" fill="rgba(21,37,64,0.4)" stroke="rgba(196,146,74,0.1)"/>
+        <line x1="380" y1="40" x2="380" y2="100" stroke="rgba(196,146,74,0.08)" stroke-width="1"/>
+        <line x1="340" y1="70" x2="420" y2="70" stroke="rgba(196,146,74,0.08)" stroke-width="1"/>
+        <!-- Reflection in glass -->
+        <rect x="342" y="42" width="36" height="56" rx="2" fill="rgba(232,168,50,0.02)"/>
+      </svg>
+
+      <!-- VU bars deco -->
+      <div class="vu-bars">
+        <div class="vu-bar"></div>
+        <div class="vu-bar"></div>
+        <div class="vu-bar"></div>
+        <div class="vu-bar"></div>
+        <div class="vu-bar"></div>
+        <div class="vu-bar"></div>
+        <div class="vu-bar"></div>
+        <div class="vu-bar"></div>
       </div>
     </div>
+  </div>
 
-    <div class="studio-info-panel">
-      <div class="info-stat">
-        <div class="info-stat-value">48h</div>
-        <div class="info-stat-label">Dostępność tygodniowo</div>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="info-stat">
-        <div class="info-stat-value">24-bit</div>
-        <div class="info-stat-label">Jakość nagrania</div>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="info-stat">
-        <div class="info-stat-value">Pro</div>
-        <div class="info-stat-label">Sprzęt & oprogramowanie</div>
-      </div>
-      <div class="stat-divider"></div>
-      <a href="#kontakt" class="btn-studio-full">ZAREZERWUJ SESJĘ →</a>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrapper">
+  <div class="ticker-track">
+    <span class="ticker-item">Nagrania wokalne</span>
+    <span class="ticker-item">Miks i mastering</span>
+    <span class="ticker-item">Produkcja muzyczna</span>
+    <span class="ticker-item">Studio główne</span>
+    <span class="ticker-item">Kabina nagraniowa</span>
+    <span class="ticker-item">Rap & Hip-Hop</span>
+    <span class="ticker-item">Kopernika 30, Warszawa</span>
+    <span class="ticker-item">Nagrania wokalne</span>
+    <span class="ticker-item">Miks i mastering</span>
+    <span class="ticker-item">Produkcja muzyczna</span>
+    <span class="ticker-item">Studio główne</span>
+    <span class="ticker-item">Kabina nagraniowa</span>
+    <span class="ticker-item">Rap & Hip-Hop</span>
+    <span class="ticker-item">Kopernika 30, Warszawa</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-text">
+    <div class="section-label">O studiu</div>
+    <h2>Miejsce, w którym <em>brzmienie</em> staje się sztuką</h2>
+    <p>Studio przy Kopernika 30 to klimatyczne, analogowo-cyfrowe studio nagraniowe w samym sercu Warszawy. Tworzone z myślą o artystach, którym zależy na brzmieniu — nie na kompromisach.</p>
+    <p>Specjalizujemy się w produkcji rapu i muzyki hip-hop. Akustyka i sprzęt zostały dobrane tak, żeby każde słowo brzmiało jak powinno — ostro, głęboko i czysto.</p>
+    <hr class="styled">
+    <div style="font-size:10px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; line-height:2.2;">
+      ul. Mikołaja Kopernika 30<br>
+      00-336 Warszawa<br>
+      Śródmieście
+    </div>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-num">01</div>
+      <div class="feature-title">Studio główne</div>
+      <div class="feature-desc">Przestronne pomieszczenie kontrolne z konsolą mikserską i monitorami studyjnymi.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">02</div>
+      <div class="feature-title">Kabina wokalna</div>
+      <div class="feature-desc">Akustycznie izolowana kabina zaprojektowana pod nagrania wokalne i rap.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">03</div>
+      <div class="feature-title">Live room</div>
+      <div class="feature-desc">Pomieszczenie do nagrań instrumentalnych z naturalną, ciepłą akustyką.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">04</div>
+      <div class="feature-title">Lounge</div>
+      <div class="feature-desc">Strefa wypoczynkowa, gdzie artyści czekają na swoją kolej lub szukają inspiracji.</div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER / KONTAKT -->
-<footer class="footer" id="kontakt">
-  <div class="footer-grid">
-    <div>
-      <div class="footer-logo">no<span>t</span>a</div>
-      <p class="footer-tagline">Szkoła muzyczna i studio nagrań w jednym miejscu. Dla pasjonatów i profesjonalistów.</p>
+<!-- EQUIPMENT -->
+<section class="equipment" id="equipment">
+  <div class="section-label">Sprzęt</div>
+  <h2 style="font-family:'DM Serif Display',serif; font-size:clamp(32px,4vw,52px); color:var(--white); margin-bottom:8px;">Profesjonalne wyposażenie</h2>
+  <p style="font-size:12px; color:var(--text-dim); letter-spacing:1px;">— placeholder, uzupełnimy o faktyczny sprzęt studia</p>
+  <div class="eq-list">
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Mikrofon pojemnościowy</div>
+        <div class="eq-cat">Nagranie wokalne</div>
+      </div>
     </div>
-    <div class="footer-col">
-      <h4>Szkoła muzyczna</h4>
-      <ul>
-        <li>Gitara</li>
-        <li>Fortepian</li>
-        <li>Perkusja</li>
-        <li>Śpiew</li>
-        <li>Teoria muzyki</li>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Konsola mikserska</div>
+        <div class="eq-cat">Kontrola sygnału</div>
+      </div>
+    </div>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Monitory studyjne</div>
+        <div class="eq-cat">Odsłuch referencyjny</div>
+      </div>
+    </div>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Interfejs audio</div>
+        <div class="eq-cat">Konwersja A/D</div>
+      </div>
+    </div>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Pre-ampy lampowe</div>
+        <div class="eq-cat">Ocieplenie brzmienia</div>
+      </div>
+    </div>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">DAW — Pro Tools / Ableton</div>
+        <div class="eq-cat">Produkcja cyfrowa</div>
+      </div>
+    </div>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Kompresory analogowe</div>
+        <div class="eq-cat">Dynamika</div>
+      </div>
+    </div>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Słuchawki studyjne</div>
+        <div class="eq-cat">Odsłuch kabin</div>
+      </div>
+    </div>
+    <div class="eq-item">
+      <div class="eq-dot"></div>
+      <div>
+        <div class="eq-name">Syntezatory & klawiatury</div>
+        <div class="eq-cat">Produkcja live</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RATES -->
+<section class="rates-section" id="rates">
+  <div class="section-label">Cennik</div>
+  <h2 style="font-family:'DM Serif Display',serif; font-size:clamp(32px,4vw,52px); color:var(--white); margin-bottom:8px;">Rezerwacje i pakiety</h2>
+  <p style="font-size:12px; color:var(--text-dim); letter-spacing:1px; margin-bottom:0;">— ceny placeholder do aktualizacji</p>
+  <div class="rates-grid">
+    <div class="rate-card">
+      <div class="rate-type">Godzinowy</div>
+      <div class="rate-price">XXX</div>
+      <div class="rate-unit">PLN / godzina</div>
+      <ul class="rate-features">
+        <li>Studio główne</li>
+        <li>Kabina wokalna</li>
+        <li>Opieka techniczna</li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h4>Studio nagrań</h4>
-      <ul>
-        <li>Nagrywanie</li>
-        <li>Mixing & Mastering</li>
-        <li>Voice Over</li>
-        <li>Produkcja muzyczna</li>
-        <li>Rezerwacja sesji</li>
+    <div class="rate-card featured">
+      <div class="rate-type">Dzienny</div>
+      <div class="rate-price">XXXX</div>
+      <div class="rate-unit">PLN / dzień (8h)</div>
+      <ul class="rate-features">
+        <li>Studio główne</li>
+        <li>Kabina wokalna</li>
+        <li>Live room</li>
+        <li>Opieka techniczna</li>
+        <li>Lounge dla ekipy</li>
+      </ul>
+    </div>
+    <div class="rate-card">
+      <div class="rate-type">Pakiet albumowy</div>
+      <div class="rate-price">???</div>
+      <div class="rate-unit">Cena do ustalenia</div>
+      <ul class="rate-features">
+        <li>Nagrania wokalne</li>
+        <li>Miks & mastering</li>
+        <li>Pełna produkcja</li>
+        <li>Termin priorytetowy</li>
       </ul>
     </div>
   </div>
-  <div class="footer-bottom">
-    <span>© 2025 Nota — Szkoła Muzyczna & Studio Nagrań</span>
-    <span>ul. Przykładowa 12, Poznań</span>
+</section>
+
+<!-- BOOKING / CONTACT -->
+<section class="booking" id="booking">
+  <div class="booking-inner">
+    <div>
+      <div class="section-label">Kontakt</div>
+      <h2 class="booking-title">ZAREZERWUJ<span>SESJĘ</span></h2>
+      <p class="booking-desc">Napisz do nas, żeby omówić szczegóły sesji, dostępność terminów i indywidualną wycenę. Odpiszemy w ciągu 24 godzin.</p>
+    </div>
+    <div class="contact-block">
+      <div class="contact-row">
+        <div class="contact-label">Adres</div>
+        <div class="contact-value">ul. Mikołaja Kopernika 30<br>00-336 Warszawa</div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Email</div>
+        <div class="contact-value">kontakt@[studio].pl</div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Telefon</div>
+        <div class="contact-value">+48 XXX XXX XXX</div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Godziny pracy</div>
+        <div class="contact-value">Pon–Sob: 10:00–22:00<br>Ndz: po umówieniu</div>
+      </div>
+      <div style="margin-top:32px;">
+        <a href="mailto:kontakt@studio.pl" class="btn-primary" style="display:inline-block;">Napisz do nas</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">
+    © 2025 Studio Kopernika 30<br>
+    Warszawa, Polska
+  </div>
+  <div class="footer-center">KOPERNIKA<br>XXXXX</div>
+  <div class="footer-right">
+    ul. Mikołaja Kopernika 30<br>
+    00-336 Warszawa
   </div>
 </footer>
 
+<script>
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('mobileMenu');
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      btn.classList.remove('open');
+      menu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+</script>
 </body>
 </html>
