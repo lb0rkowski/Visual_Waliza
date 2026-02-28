@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CASEOUT STUDIO — Website
 
 Strona internetowa studia nagraniowego Caseout Studio.
@@ -79,3 +80,6 @@ import Image from "next/image";
 - [ ] Etap 5: Formularz kontaktowy (email)
 - [ ] Etap 6: SEO + Open Graph + metadata
 - [ ] Etap 7: Deploy na Vercel
+=======
+# Visual_Waliza
+>>>>>>> c0a42c1933927ef65a2205e5617499237b48c19d
